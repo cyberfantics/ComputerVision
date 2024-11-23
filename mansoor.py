@@ -1,16 +1,17 @@
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+import math
 
 class Repeatable:
-    def __init__(self, resize_width=None, resize_height=None, base_path='data/'):
+    def __init__(self, resize_width=None, resize_height=None, base_path='data/images/'):
         '''Initializes the Repeatable object with optional resizing parameters.'''
         self.resize_width = resize_width
         self.resize_height = resize_height
         self.base_path = base_path
 
     def showImage(self, img, name="Image", show_axis=False, save_path=None):
-        '''Displays an image using matplotlib with a given title, 
+        '''Displays a single image using matplotlib with a given title, 
         optionally saving it and toggling axis visibility.
 
         Args:
@@ -23,11 +24,19 @@ class Repeatable:
         if self.resize_width and self.resize_height:
             img = cv2.resize(img, (self.resize_width, self.resize_height))
 
+        # Convert BGR to RGB for correct display
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Display the image using Matplotlib
-        plt.imshow(img)
+        plt.imshow(img_rgb)
         plt.axis('on' if show_axis else 'off')
         plt.title(name)
+
+        # Save the image if a path is provided
+        if save_path:
+            plt.savefig(save_path, bbox_inches='tight')
+
+        plt.show()
 
     def show_image_with_color(self, img, name="Image", show_axis=False, save_path=None):
         '''Displays an image using matplotlib with a given title, 
@@ -57,6 +66,52 @@ class Repeatable:
 
         plt.show()
 
+    def show_multiple_images(self, images, titles=None, cols=3, show_axis=False, save_path=None):
+        '''
+        Displays multiple images using Matplotlib subplots.
+
+        Args:
+            images (list of ndarray): List of images to display (BGR format).
+            titles (list of str, optional): List of titles for each image.
+            cols (int, optional): Number of columns in the subplot grid. Defaults to 2.
+            show_axis (bool, optional): If True, displays axes for all images. Defaults to False.
+            save_path (str, optional): If provided, saves the figure to the specified path.
+        '''
+        if not isinstance(images, (list, tuple)):
+            raise TypeError("Images should be provided as a list or tuple of ndarray images.")
+
+        num_images = len(images)
+        if titles and len(titles) != num_images:
+            raise ValueError("Number of titles must match the number of images.")
+
+        # Calculate the number of rows needed
+        rows = math.ceil(num_images / cols)
+
+        # Create a matplotlib figure
+        plt.figure(figsize=(5 * cols, 5 * rows))
+
+        for idx, img in enumerate(images):
+            # Resize the image if the resize dimensions are specified
+            if self.resize_width and self.resize_height:
+                img = cv2.resize(img, (self.resize_width, self.resize_height))
+
+            # Convert BGR to RGB for correct display
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            # Add a subplot for each image
+            ax = plt.subplot(rows, cols, idx + 1)
+            ax.imshow(img_rgb)
+            ax.axis('on' if show_axis else 'off')
+            if titles:
+                ax.set_title(titles[idx])
+
+        plt.tight_layout()
+
+        # Save the figure if a path is provided
+        if save_path:
+            plt.savefig(save_path, bbox_inches='tight')
+
+        plt.show()
 
     def shape_of_images(self, *args):
         '''Checks and prints the shapes of multiple images.
@@ -69,7 +124,6 @@ class Repeatable:
                 print(f'Image {idx} shape: {img.shape}')
             else:
                 print(f'Image {idx} is not a valid NumPy array.')
-
 
     def writeText(self, img, text, color=(120, 255, 80), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1, thickness=3):
         """
@@ -85,7 +139,6 @@ class Repeatable:
     
         Returns:
             numpy.ndarray: The image with the text drawn on it.
-        
         """
         
         # Get the image dimensions
