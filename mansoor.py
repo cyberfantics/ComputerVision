@@ -120,9 +120,9 @@ class Repeatable:
             *args: A variable number of image arrays (ndarrays).
         '''
         for idx, img in enumerate(args, start=1):
-            if isinstance(img, np.ndarray):
+            try:
                 print(f'Image {idx} shape: {img.shape}')
-            else:
+            except:
                 print(f'Image {idx} is not a valid NumPy array.')
 
     def writeText(self, img, text, color=(120, 255, 80), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1, thickness=3):
