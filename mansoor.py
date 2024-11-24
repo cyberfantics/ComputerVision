@@ -24,11 +24,8 @@ class Repeatable:
         if self.resize_width and self.resize_height:
             img = cv2.resize(img, (self.resize_width, self.resize_height))
 
-        # Convert BGR to RGB for correct display
-        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
         # Display the image using Matplotlib
-        plt.imshow(img_rgb)
+        plt.imshow(img)
         plt.axis('on' if show_axis else 'off')
         plt.title(name)
 
