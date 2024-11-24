@@ -176,3 +176,54 @@ class Repeatable:
         
         # Load and return the image
         return cv2.imread(img_path, flag)
+
+
+    # Show Images Through OpenCV
+    def showImagesThroughOpenCV(images, titles, delay=0, window_size=None, window_position=None):
+        """
+        Displays a list of images in separate OpenCV windows with specified titles.
+        
+        Args:
+        images (list of numpy arrays): List of images to be displayed. Each image is a numpy array representing an image.
+        titles (list of str): List of titles for each window that will display the images.
+        delay (int, optional): Delay in milliseconds to display each image. Default is 0 (wait indefinitely for key press).
+        window_size (tuple, optional): Tuple specifying the width and height to resize each window (width, height). 
+                                    If None, windows will be displayed in their original size. Default is None.
+        window_position (tuple, optional): Tuple specifying the (x, y) position to place the window. Default is None.
+        
+        Raises:
+        ValueError: If the number of images does not match the number of titles.
+        FileNotFoundError: If an image fails to load or is None.
+        """
+        # Check if both lists are of the same length
+        if len(images) != len(titles):
+            raise ValueError("The number of images and titles must be the same.")
+
+        # Check if either list is empty
+        if not images or not titles:
+            raise ValueError("Images or titles list is empty.")
+
+        # Iterate through the images and titles
+        for idx, (image, title) in enumerate(zip(images, titles)):
+            # Check if the image is valid
+            if image is None:
+                raise FileNotFoundError(f"Image at index {idx} failed to load or is None.")
+
+            # Set window properties if provided
+            if window_size:
+                cv2.resizeWindow(title, window_size[0], window_size[1])
+            if window_position:
+                cv2.moveWindow(title, window_position[0], window_position[1] + idx * 50)  # Slight vertical offset for each window
+
+            # Show the image
+            cv2.imshow(title, image)
+            
+            # Wait for a specified delay or until a key is pressed
+            key = cv2.waitKey(delay)
+            if key == ord('q'):  # If 'q' is pressed, break the loop and close all windows
+                print("Closing windows...")
+                break
+
+        # Close all windows after the key press or delay
+        cv2.destroyAllWindows()
+ 
