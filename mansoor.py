@@ -90,7 +90,6 @@ class Repeatable:
         for idx, img in enumerate(images):
             # Resize the image if the resize dimensions are specified
             if self.resize_width and self.resize_height and resize:
-                print('Resizing Image')
                 img = cv2.resize(img, (self.resize_width, self.resize_height))
 
             # Convert BGR to RGB for correct display
@@ -179,7 +178,7 @@ class Repeatable:
 
 
     # Show Images Through OpenCV
-    def showImagesThroughOpenCV(images, titles, delay=0, window_size=None, window_position=None):
+    def showImagesThroughOpenCV(self, images, titles, delay=0, window_size=None, window_position=None):
         """
         Displays a list of images in separate OpenCV windows with specified titles.
         
