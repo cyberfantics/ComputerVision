@@ -4,11 +4,12 @@ import numpy as np
 import math
 
 class Repeatable:
-    def __init__(self, resize_width=None, resize_height=None, base_path='data/images/'):
+    def __init__(self, resize_width=None, resize_height=None, base_path='data/images/', video_path = 'data/video/'):
         '''Initializes the Repeatable object with optional resizing parameters.'''
         self.resize_width = resize_width
         self.resize_height = resize_height
         self.base_path = base_path
+        self.video_path = video_path
 
     def showImage(self, img, name="Image", show_axis=False, save_path=None):
         '''Displays a single image using matplotlib with a given title, 
@@ -226,3 +227,22 @@ class Repeatable:
         # Close all windows after the key press or delay
         cv2.destroyAllWindows()
  
+    # Load Video
+    def load_video(self, vid='1.mp4'):
+        """
+        Loads an Video from the predefined directory.
+
+        Parameters:
+        vid (str): The name of the Video file to load. Default is 'bin_Salman.jpg'.
+
+        Returns:        
+        This function constructs the full Video path by combining the base path
+        with the provided video file name and loads the Video using OpenCV.
+        If the base path changes in the future, it needs to be updated in only
+        one place (the 'base_path' class variable).
+        """
+        # Construct the full Video path using the base path
+        vid_path = self.video_path + vid
+        
+        # Load and return the Video
+        return cv2.VideoCapture(vid_path)
