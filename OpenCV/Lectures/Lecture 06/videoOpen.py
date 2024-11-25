@@ -1,7 +1,4 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import cv2, sys
-
 
 # Manually specify the path to the project directory
 project_path = '../../../'
@@ -25,3 +22,7 @@ while video.isOpened():
 
     else:
         break
+
+
+video.release()
+cv2.destroyAllWindows()
