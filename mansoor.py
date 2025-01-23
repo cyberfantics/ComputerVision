@@ -94,11 +94,14 @@ class Repeatable:
                 img = cv2.resize(img, (self.resize_width, self.resize_height))
 
             # Convert BGR to RGB for correct display
-            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            try:
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            except:
+                pass
 
             # Add a subplot for each image
             ax = plt.subplot(rows, cols, idx + 1)
-            ax.imshow(img_rgb)
+            ax.imshow(img)
             ax.axis('on' if show_axis else 'off')
             if titles:
                 ax.set_title(titles[idx])
